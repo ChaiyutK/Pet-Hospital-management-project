@@ -1,0 +1,113 @@
+<?php
+session_start();
+require("../config/config.php");
+require("../mysql/config.php");
+if($_SESSION['type'] != "veterinary")
+{
+        echo "<script>window.open('../Main.php','_self');</script>";
+}
+$userid = $_SESSION['userid'];
+$sql="select treatmentroomid,treatmentroom.name as roomname,vetid from treatmentroom where vetid = $userid";
+require("../mysql/connect.php");
+$record = mysqli_fetch_array($result);
+if(!empty($record['vetid']))
+{
+  echo "<script>window.open('vetdelroom.php','_self');</script>";
+}
+?>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ระบบจัดการการตรวจรักษา</title>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+     <style>
+body {
+  background-image: url("<?php echo $bgimage; ?>");
+  background-repeat: no-repeat;
+    background-size: 120% auto;
+}
+h3 {
+    font-family: "TH SarabunPSK";
+}
+.head1 {
+  font-family: "TH SarabunPSK";
+  font-size: 60px;
+}
+.btmenu {
+ margin: 5%;
+}    
+      </style>
+  </head>
+  <body>
+ <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="<?php echo $home; ?>">ระบบจัดการการตรวจรักษา</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="<?php echo $vetregissystem; ?>">ระบบทะเบียน <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="<?php echo $vettreatment; ?>">ระบบตรวจรักษา <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="<?php echo $vetpaydrug; ?>">ระบบจ่ายยา <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="<?php echo $vetappointment; ?>">ระบบนัดหมาย <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="<?php echo $vetdrugservice; ?>">ระบบคลังยาและบริการ <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="<?php echo $veteditself; ?>">แก้ไขโปรไฟล์ส่วนตัว <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+    <span class = "badge badge-warning" style="font-family: 'TH SarabunPSK';font-weight: bold;"><h4><?php echo $_SESSION['name'] . "&nbsp;สัตวแพทย์" ."&nbsp;
+    <a href = '../logout.php'>logout</a>" ?></h4></span>
+  </div>
+</nav>
+
+   <center><div class="head1"><br>กรุณาเลือกห้องตรวจที่ต้องการ</div></center>
+   <center>
+   <form action="vetchooseroomsave.php" method="post">
+   
+   <table border="0" width="40%">
+   <tr>
+   <td align="center">
+   <div style="width: 100%;">
+<select class="browser-default custom-select" name="treatmentroomid" required>
+    <option value = "">----ห้องตรวจ----</option>
+               <?php
+               require("../mysql/unconnect.php");
+               $sql="select treatmentroomid,treatmentroom.name as roomname,vetid from treatmentroom where vetid IS NULL";
+               require("../mysql/connect.php");
+               while($row=mysqli_fetch_array($result)){
+    
+                $i = $i+1;
+               echo "<option value='$row[treatmentroomid]'>$row[roomname]</option>";
+               
+            }
+            ?>
+    </select>
+    </div>
+    </td>
+    <tr><td align="center"><input class="btn btn-primary" type="submit" value="เลือก"></td></tr>
+
+   </tr>
+   </table>
+  
+   </form>
+   </center>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  
+
+  </body>
+  
+</html>
